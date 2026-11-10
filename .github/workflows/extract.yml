@@ -1,0 +1,29 @@
+name: Extract project
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract project files and commit them
+        run: |
+          unzip -o edumind-ai-project.zip
+          if [ -d edumind-ai ]; then
+            shopt -s dotglob
+            mv edumind-ai/* .
+            rmdir edumind-ai
+          fi
+          rm -f edumind-ai-project.zip
+          rm -f .github/workflows/extract.yml
+          git config user.name "shehzadarain252"
+          git config user.email "shehzadarain261@gmail.com"
+          git add -A
+          git status --short
+          git commit -m "Extract EduMind AI project files" || echo "nothing to commit"
+          git push
