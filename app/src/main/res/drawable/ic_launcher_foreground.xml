@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Original EduMind AI launcher foreground: a graduation cap with a tassel.
+     Drawn for this app — no Google logos or copyrighted branding. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Cap board (diamond). -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,22 L94,40 L54,58 L14,40 Z" />
+    <!-- Cap base. -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M38,52 L54,60 L70,52 L70,70 C70,78 38,78 38,70 Z" />
+    <!-- Tassel cord. -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M90,42 h4 v24 h-4 Z" />
+    <!-- Tassel end (circle). -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M92,66 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0" />
+    <!-- Spark. -->
+    <path
+        android:fillColor="#FDE68A"
+        android:pathData="M54,76 l2.2,5.8 5.8,2.2 -5.8,2.2 -2.2,5.8 -2.2,-5.8 -5.8,-2.2 5.8,-2.2 Z" />
+</vector>

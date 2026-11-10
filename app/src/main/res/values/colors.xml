@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- EduMind AI brand colors (used by the Android launcher icon + window). -->
+    <color name="ic_launcher_background">#7C3AED</color>
+    <color name="status_bar">#7C3AED</color>
+    <color name="brand_blue">#2563EB</color>
+    <color name="brand_violet">#7C3AED</color>
+</resources>
