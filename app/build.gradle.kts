@@ -120,4 +120,6 @@ dependencies {
 
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+implementation("com.google.guava:guava:32.1.2-android")
+implementation("com.google.mlkit:barcode-scanning:17.3.0")
 }
