@@ -38,6 +38,7 @@ app.use(express.static("public"));
 app.get("/privacy-policy", (req, res) => {
 res.sendFile(path.join(__dirname, "public", "privacy-policy.html"));
 });
+
 // ---------- Gemini client (created lazily; never logs the key) ----------
 let genAI = null;
 function getModel() {
