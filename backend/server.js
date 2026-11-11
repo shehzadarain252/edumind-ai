@@ -23,7 +23,7 @@ const JSZip = require("jszip");
 
 const PORT = process.env.PORT || 3000;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
 const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
 
 const app = express();
@@ -75,7 +75,8 @@ const ANSWER_FORMAT = `Answer in this exact structure when it fits the question:
 5. Examples
 6. Important Points
 7. Final Conclusion
-Omit a section only if it truly does not apply. Be accurate and clear. If you are unsure about a fact, say so instead of inventing it. Never invent references, statistics, or quotations.`;
+Omit a section only if it truly does not apply. Be accurate and clear. If you are unsure about a fact, say so instead of inventing it. Never invent references, statistics, or quotations. 
+IMPORTANT - PLAIN TEXT ONLY: The app shows your answer as plain text, so NEVER use Markdown or LaTeX. Do NOT use **bold**, # headings, backticks, or any Markdown symbols. Do NOT use $ dollar signs or LaTeX commands like \frac, \neq, \sqrt. Write maths in plain text: use x^2 for powers, 1/2 for fractions, sqrt(x) for square roots, and words or simple symbols (for example write "x is not equal to 0" instead of $a \neq 0$). Write section titles as plain numbered lines, e.g. "1. Direct Answer" on its own line, then the text below it. Use simple line breaks and plain dashes (-) for bullet points.`;
 
 const BASE_SYSTEM = `You are EduMind AI, a friendly and accurate AI tutor for students of all levels (school to postgraduate). ${ANSWER_FORMAT}`;
 
