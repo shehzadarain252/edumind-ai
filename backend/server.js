@@ -14,6 +14,7 @@
  */
 require("dotenv").config();
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
 const multer = require("multer");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
@@ -33,7 +34,10 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Serve the ads.txt publisher declaration for the associated website.
 app.use(express.static("public"));
-
+// Serve the privacy policy page for the Amazon Appstore listing.
+app.get("/privacy-policy", (req, res) => {
+res.sendFile(path.join(__dirname, "public", "privacy-policy.html"));
+});
 // ---------- Gemini client (created lazily; never logs the key) ----------
 let genAI = null;
 function getModel() {
