@@ -26,7 +26,9 @@ class EduMindApp : Application() {
         // Initialize Google Mobile Ads on a background thread.
         // (UMP consent is requested from MainActivity, which is an Activity.)
         Thread {
-            MobileAds.initialize(this) {}
+            MobileAds.initialize(this) {
+                container.adMobManager.preloadAds()
+            }
         }.start()
     }
 }
