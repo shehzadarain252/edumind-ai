@@ -18,7 +18,7 @@ if (localPropertiesFile.exists()) {
 // state until a real backend URL is set.
 val backendUrl: String =
     (localProperties.getProperty("BACKEND_URL") as? String)
-        ?: "https://your-backend.example.com"
+        ?: "https://edumind-ai-jbv7.onrender.com"
 
 android {
     namespace = "com.edumind.ai"
