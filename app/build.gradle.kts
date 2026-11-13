@@ -4,6 +4,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 val localProperties = Properties()
@@ -11,14 +13,13 @@ val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
     localProperties.load(localPropertiesFile.inputStream())
 }
-
 // Backend base URL. Override in local.properties with:
 //   BACKEND_URL=https://your-backend.example.com
 // Default is a placeholder — the app shows a clear "AI not configured"
 // state until a real backend URL is set.
 val backendUrl: String =
     (localProperties.getProperty("BACKEND_URL") as? String)
-        ?: "https://edumind-ai-jbv7.onrender.com"
+        ?: "https://your-backend.example.com"
 
 android {
     namespace = "com.edumind.ai"
@@ -28,8 +29,8 @@ android {
         applicationId = "com.edumind.ai"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -56,16 +57,20 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = "17"
     }
+
     buildFeatures {
         compose = true
         buildConfig = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.14"
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -85,8 +90,6 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended")
-    // Material Components (views) — provides Theme.Material3.* used by themes.xml
-    implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
     // CameraX
@@ -118,8 +121,11 @@ dependencies {
     implementation("com.google.android.gms:play-services-ads:23.0.0")
     implementation("com.google.android.ump:user-messaging-platform:2.2.0")
 
+    // Firebase Analytics + Crashlytics (anonymous usage stats + crash reports)
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-crashlytics")
+
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-implementation("com.google.guava:guava:32.1.2-android")
-implementation("com.google.mlkit:barcode-scanning:17.3.0")
 }
