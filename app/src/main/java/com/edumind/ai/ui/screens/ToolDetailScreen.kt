@@ -1,6 +1,5 @@
 package com.edumind.ai.ui.screens
 
-import android.app.Activity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -38,9 +36,9 @@ import com.edumind.ai.ui.viewmodel.ToolsViewModel
  * One screen per AI study tool, driven by the tool's config.
  * Input -> loading -> output (with Copy/Share/Regenerate/Save).
  *
- * An interstitial ad is shown ONLY at the natural transition of leaving
- * this tool (the "Back to Tools" button), and only when the frequency
- * cooldown has passed. Ads never interrupt tool input or generation.
+ * No ad is shown from this screen. Interstitials are handled centrally:
+ * any option tap schedules an ad 5 seconds later (see EduMindNavHost).
+ * Ads never interrupt tool input or generation.
  */
 @Composable
 fun ToolDetailScreen(
@@ -49,9 +47,6 @@ fun ToolDetailScreen(
     navController: NavHostController,
 ) {
     val tool = findTool(toolId)
-    val context = LocalContext.current
-    // The container is obtained from the activity's application for ads.
-    val container = (context.applicationContext as com.edumind.ai.EduMindApp).container
     val state by viewModel.state.collectAsState()
     var input by remember { mutableStateOf("") }
 
@@ -63,14 +58,10 @@ fun ToolDetailScreen(
     }
 
     fun goBackWithAd() {
-        val activity = context as? Activity
-        if (activity != null && container.adMobManager.canShowInterstitial()) {
-            container.adMobManager.showInterstitial(activity) {
-                navController.popBackStack()
-            }
-        } else {
-            navController.popBackStack()
-        }
+        // Interstitials are handled centrally: any option tap schedules an
+        // ad 5 seconds later (see EduMindNavHost). No ad is shown here, so
+        // leaving a tool never triggers a second ad.
+        navController.popBackStack()
     }
 
     Column(
