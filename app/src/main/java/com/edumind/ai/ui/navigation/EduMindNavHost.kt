@@ -1,5 +1,7 @@
 package com.edumind.ai.ui.navigation
 
+import android.app.Activity
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
@@ -13,9 +15,11 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,6 +32,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.edumind.ai.AppContainer
+import com.edumind.ai.ui.components.BannerAd
 import com.edumind.ai.ui.screens.AboutScreen
 import com.edumind.ai.ui.screens.AskAiScreen
 import com.edumind.ai.ui.screens.ChatHistoryScreen
@@ -82,31 +87,47 @@ fun EduMindNavHost(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
     val showBottomBar = BottomTabs.any { it.route == currentRoute }
+    val context = LocalContext.current
+
+    // Any option tap navigates somewhere. 5 seconds after each navigation
+    // (except Splash/Onboarding, which are not taps), schedule an
+    // interstitial — it shows only if an ad is loaded and the 60-second
+    // cooldown has passed. A newer tap restarts the 5-second wait.
+    LaunchedEffect(currentRoute) {
+        val route = currentRoute ?: return@LaunchedEffect
+        if (route == Routes.SPLASH || route == Routes.ONBOARDING) return@LaunchedEffect
+        val activity = context as? Activity ?: return@LaunchedEffect
+        container.adMobManager.scheduleInterstitialAfterDelay(activity)
+    }
 
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                NavigationBar {
-                    BottomTabs.forEach { tab ->
-                        NavigationBarItem(
-                            selected = currentRoute == tab.route,
-                            onClick = {
-                                navController.navigate(tab.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
+                Column {
+                    // LIVE banner ad, above the bottom navigation bar.
+                    BannerAd(container = container)
+                    NavigationBar {
+                        BottomTabs.forEach { tab ->
+                            NavigationBarItem(
+                                selected = currentRoute == tab.route,
+                                onClick = {
+                                    navController.navigate(tab.route) {
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = tabIcons[tab.route] ?: Icons.Filled.Home,
-                                    contentDescription = tab.label,
-                                )
-                            },
-                            label = { Text(tab.label) },
-                        )
+                                },
+                                icon = {
+                                    Icon(
+                                        imageVector = tabIcons[tab.route] ?: Icons.Filled.Home,
+                                        contentDescription = tab.label,
+                                    )
+                                },
+                                label = { Text(tab.label) },
+                            )
+                        }
                     }
                 }
             }
