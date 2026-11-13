@@ -14,12 +14,14 @@ if (localPropertiesFile.exists()) {
     localProperties.load(localPropertiesFile.inputStream())
 }
 // Backend base URL. Override in local.properties with:
-//   BACKEND_URL=https://your-backend.example.com
-// Default is a placeholder — the app shows a clear "AI not configured"
-// state until a real backend URL is set.
+//   BACKEND_URL=https://edumind-ai-jbv7.onrender.com
+// Default is the LIVE production backend. (It must NOT be a placeholder:
+// CI builds have no local.properties, so a placeholder default would bake
+// "AI is not configured" into every release build — that is exactly what
+// happened in v1.0.1.)
 val backendUrl: String =
     (localProperties.getProperty("BACKEND_URL") as? String)
-        ?: "https://your-backend.example.com"
+        ?: "https://edumind-ai-jbv7.onrender.com"
 
 android {
     namespace = "com.edumind.ai"
@@ -29,8 +31,8 @@ android {
         applicationId = "com.edumind.ai"
         minSdk = 26
         targetSdk = 34
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 3
+        versionName = "1.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
