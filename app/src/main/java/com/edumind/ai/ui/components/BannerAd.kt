@@ -26,7 +26,7 @@ import com.google.android.gms.ads.LoadAdError
 fun BannerAd(container: AppContainer, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
-    val adUnitId = container.adMobManager.bannerAdUnitId
+    val bannerUnitId = container.adMobManager.bannerAdUnitId
 
     // Anchored adaptive banner sized to the current screen width.
     val adSize = remember(configuration.screenWidthDp) {
@@ -34,10 +34,13 @@ fun BannerAd(container: AppContainer, modifier: Modifier = Modifier) {
         AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width)
     }
 
-    val adView = remember(adUnitId, adSize) {
+    val adView = remember(bannerUnitId, adSize) {
         AdView(context).apply {
             setAdSize(adSize)
-            adUnitId = adUnitId
+            // NOTE: the local must NOT be named adUnitId — inside apply{} a
+            // local val would shadow the AdView property and the assignment
+            // would fail to compile ("Val cannot be reassigned").
+            adUnitId = bannerUnitId
             adListener = object : AdListener() {
                 override fun onAdFailedToLoad(error: LoadAdError) {
                     // Banner stays hidden; retry on next composition.
