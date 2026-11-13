@@ -90,6 +90,12 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended")
+
+    // Material Components — provides the Theme.Material3.DayNight.NoActionBar
+    // XML theme used as the Activity theme parent in res/values/themes.xml.
+    // (The Compose material3 library above does NOT include that XML theme,
+    // so the resource linker failed without this dependency.)
+    implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
     // CameraX
