@@ -1,0 +1,98 @@
+# EduMind AI — GitHub Actions cloud build (SIGNED RELEASE APK)
+#
+# Why this file exists: the project has NO gradlew / gradlew.bat and NO
+# gradle-wrapper.jar, so "./gradlew assembleDebug" fails both on a computer
+# and in CI. This workflow therefore installs Gradle 8.7 itself and runs
+# the plain `gradle` command instead of the wrapper. Do NOT "fix" it by
+# switching back to ./gradlew unless the wrapper scripts + jar are added.
+#
+# How to use (after signing in to GitHub as shehzadarain252):
+#   1. Push this whole project to the GitHub repo (see .gitignore — it
+#      keeps local.properties, backend/.env and the keystore OUT of the repo).
+#   2. GitHub > repo > Settings > Secrets and variables > Actions: set
+#      KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD
+#      (values are in keystore/credentials.txt on the build machine —
+#      NEVER commit that file or the keystore itself).
+#   3. GitHub > repo > Actions > "Build APK" > Run workflow (or push to main).
+#   4. When the run finishes, download the "edumind-ai-release-apk"
+#      artifact (app-release.apk) and install it on the phone.
+# Notes:
+#   - This builds the SIGNED RELEASE apk (v1.0.3, version code 4).
+#     The release keystore was created 2026-11-25 (alias edumind).
+#   - AI answers need BACKEND_URL set (see the step below). Without it the
+#     build falls back to the https://your-backend.example.com placeholder
+#     and the app shows "AI is not configured" — that was the v1.0.1 bug
+#     (backend was live, the APK never pointed at it). The backend is live
+#     at https://edumind-ai-jbv7.onrender.com (verified 2026-11-13).
+#   - Project facts this workflow is built on (checked 2026-11-10):
+#     AGP 8.5.2, Gradle 8.7, Java/Kotlin JVM 17, compileSdk/targetSdk 34,
+#     minSdk 26, applicationId com.edumind.ai, version 1.0.3 (code 4).
+
+name: Build APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android platform 34
+        run: |
+          sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+
+      - name: Set backend URL for the app build
+        # local.properties is gitignored, so CI never has BACKEND_URL unless
+        # we write it here. Without this line the APK is built with the
+        # placeholder URL and Ask AI shows "AI is not configured".
+        run: |
+          echo "BACKEND_URL=https://edumind-ai-jbv7.onrender.com" >> local.properties
+          grep BACKEND_URL local.properties | sed 's/=.*/=***/'
+
+      - name: Set up Gradle 8.7 (no wrapper in this project)
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: "8.7"
+
+      - name: Set up release signing
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then echo "::error::KEYSTORE_BASE64 secret is not set"; exit 1; fi
+          if [ -z "$KEYSTORE_PASSWORD" ] || [ -z "$KEY_ALIAS" ] || [ -z "$KEY_PASSWORD" ]; then echo "::error::One or more signing secrets are not set (KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD)"; exit 1; fi
+          mkdir -p keystore
+          echo "$KEYSTORE_BASE64" | base64 -d > keystore/release.keystore
+          cat > keystore.properties <<EOF
+          storeFile=$GITHUB_WORKSPACE/keystore/release.keystore
+          storePassword=$KEYSTORE_PASSWORD
+          keyAlias=$KEY_ALIAS
+          keyPassword=$KEY_PASSWORD
+          EOF
+          echo "Signing keystore and keystore.properties created."
+
+      - name: Build signed release APK
+        run: gradle :app:assembleRelease --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: edumind-ai-release-apk
+          path: app/build/outputs/apk/release/app-release.apk
+          retention-days: 30

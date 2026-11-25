@@ -1,0 +1,33 @@
+# EduMind AI — root .gitignore (added 2026-11-10 for the GitHub cloud build)
+# The project previously had NO root .gitignore: only backend/.gitignore
+# existed, so local.properties (machine SDK path) would have been committed.
+# NEVER commit backend/.env — it holds the Gemini API key.
+
+# Local machine config (SDK path, BACKEND_URL override)
+local.properties
+
+# Gradle / build outputs
+.gradle/
+build/
+app/build/
+*.apk
+*.aab
+
+# Android Studio / IntelliJ
+*.iml
+.idea/
+*.iws
+*.ipr
+
+# Backend secrets and deps
+backend/.env
+backend/node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Release signing (v1.0.3) — NEVER commit the keystore or its passwords.
+/keystore/
+keystore.properties
+google-services.json.old-*

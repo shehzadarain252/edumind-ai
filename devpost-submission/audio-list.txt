@@ -1,0 +1,7 @@
+file '/home/hatch/workspace/edumind-ai/devpost-submission/segments/seg01.wav'
+file '/home/hatch/workspace/edumind-ai/devpost-submission/segments/seg02.wav'
+file '/home/hatch/workspace/edumind-ai/devpost-submission/segments/seg03.wav'
+file '/home/hatch/workspace/edumind-ai/devpost-submission/segments/seg04.wav'
+file '/home/hatch/workspace/edumind-ai/devpost-submission/segments/seg05.wav'
+file '/home/hatch/workspace/edumind-ai/devpost-submission/segments/seg06.wav'
+file '/home/hatch/workspace/edumind-ai/devpost-submission/segments/seg07.wav'

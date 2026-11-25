@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "355180434522",
+    "project_id": "edumind-ai-67ced",
+    "storage_bucket": "edumind-ai-67ced.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:355180434522:android:ff4b06dccb70f3bee7f463",
+        "android_client_info": {
+          "package_name": "com.edumind.ai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjyXzxEr6jHduk9wAGxlHvq_7lgIyH1LM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

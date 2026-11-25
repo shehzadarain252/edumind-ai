@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base Activity theme. The Compose Material 3 theme (ui/theme/Theme.kt)
+         controls the in-app colors for light/dark mode. -->
+    <style name="Theme.EduMindAI" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@color/status_bar</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
+    </style>
+</resources>
