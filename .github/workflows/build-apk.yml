@@ -51,12 +51,15 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
         with:
-          # 2026-11-25 fix: without these, the action installs the
-          # obsolete "tools" package ("Failed to find package 'tools'")
-          # and the run fails. Use cmdline-tools 16.0 and install only
-          # platform-tools explicitly — the platform/build-tools install
-          # is the next step.
-          cmdline-tools-version: "16.0"
+          # 2026-11-25 fix: do NOT pin cmdline-tools-version — the action
+          # builds the download URL as commandlinetools-linux-<version>
+          # _latest.zip, and both "12.0" and "16.0" give a 404 from
+          # Google. With no version pinned the action resolves the
+          # latest build number itself and downloads fine. The real
+          # failure was the action's default package list including the
+          # obsolete "tools" package ("Failed to find package 'tools'"),
+          # so install only platform-tools explicitly — the
+          # platform/build-tools install is the next step.
           packages: platform-tools
 
       - name: Install Android platform 34
